@@ -1,0 +1,121 @@
+SYNOPSIS:
+  ./vlg_extractor [COMMANDS] [OPTIONS]  list_input  input_dir  output_dir
+
+  list_input: This is an ascii-file containing the relative path
+              (to input_dir) of the input files
+  input_dir:  Directory that contains the images
+  output_dir: Directory that will contain the features
+
+COMMANDS:
+  --help: It shows this help
+
+  --extract_classemes=[OUTPUT_TYPE]
+        This extract the continuous version
+  --extract_classemes_bin=[OUTPUT_TYPE]
+        This extract the binary version
+  --extract_picodes128=[OUTPUT_TYPE]
+  --extract_picodes1024=[OUTPUT_TYPE]
+  --extract_picodes2048=[OUTPUT_TYPE]
+  --extract_mc=[OUTPUT_TYPE]
+  --extract_mc_bit=[OUTPUT_TYPE]
+  --extract_concatenationLowLevelFeatures=[OUTPUT_TYPE]
+
+
+OPTIONS:
+  --parameters-dir=<path directory>
+       The directory of the parameters. Default is "<root>/data".
+
+  --classeme-suffix
+       This specifies the suffix to use for the classemes output files.
+       Default "_classemes".
+       Note: in case of "--extract_classemes_bin", we append a "BIN" at the end
+             of the filename.
+
+  --picodes-suffix
+       Default: "_picodes"
+       Note A proper number indicating the dimensionality
+       will be append to the filename
+
+  --mc-suffix
+      Default: "_mc"
+
+  --load-concatenation-low-level-features=[INPUT_TYPE]
+
+  --concatenation-low-level-features-prefix
+      Default: "_low_level_features_v2"
+
+  --disable-output-overwriting
+      It does not overwrite a file with the same name on disk
+      (by default, the software overwrites everything).
+
+
+[OUTPUT_TYPE]
+   It can be {ASCII, FLOAT, BIN}
+     ASCII is an ascii file containing a matrix.
+           The software automatically adds extension ".ascii" to this filename.
+     FLOAT is a binary file, containing a matrix. The values are stored in
+           row order.
+           The format is: <uint: n_rows><uint: n_cols><float: data[0]>...
+                             <float: data[n_rows*n_cols-1]>
+		       where uint and float are 4-bytes each.
+           The software automatically adds extension ".dat" to this filename.
+           We provide function "load_float_matrix.m" to load this type of files
+           into Matlab.
+      BIN  This produces the most compact output file: it saves a file which
+	       i-th bit corresponds to i-th bit entry.
+		   The unused entries in the last byte are filled with zeros.
+           The extension is ".bin".
+           We provide function "load_bit_vector.m" to load this type of files
+           into Matlab.
+           Note that this format makes sense only for "classemes_bin",
+           "picodes" and "mc_bit".
+
+      Note: there can be multiple [OUTPUT_TYPE] options in order to produce
+            more output.
+
+[INPUT_TYPE]
+   It can be FLOAT. See the [OUTPUT_TYPE] description above.
+
+
+NOTES about extract_concatenationLowLevelFeatures:
+  This command will extract the low-level features used for the
+  construction of the high-level representation classemes, picodes, mc and
+  their binary variants. The resulting vector consisting of the
+  concatenation of such features has 22860 dimensions, organized as follows:
+  - GIST level 0: dims 1:960
+  - PHOG-180 level 0: dims 961,980
+             level 1: dims 981,1060
+             level 2: dims 1061,1380
+             level 3: dims 1381,2660
+  - PHOG-360 level 0: dims 2661,2700
+             level 1: dims 2701,2860
+             level 2: dims 2861,3500
+             level 3: dims 3501,6060
+  - SSIM level 0: dims 6061,6360
+         level 1: dims 6361,7560
+         level 2: dims 7561,12360
+  - SIFT-BOW level 0: dims 12361,12860
+             level 1: dims 12861,14860
+             level 2: dims 14861,22860
+
+AUTHORS:
+  * Alessandro Bergamo
+    aleb@cs.dartmouth.edu
+
+  * Chen Fang
+    chen@cs.dartmouth.edu
+
+  * Lorenzo Torresani
+    lorenzo@cs.dartmouth.edu
+
+REPORTING BUGS:
+  Report bugs to Alessandro Bergamo aleb@cs.dartmouth.edu
+  Please send a precise and complete report.
+
+REFERENCES:
+  [1] Efficient Object Category Recognition using Classemes,
+      Lorenzo Torresani et others, ECCV2010
+  [2] Alessandro Bergamo, Lorenzo Torresani, Andrew Fitzgibbon
+      PiCoDes: Learning a Compact Code for Novel-Category Recognition, NIPS 2011
+  [3] Alessandro Bergamo, Lorenzo Torresani
+      Meta-Class Features for Large-Scale Object Categorization on a Budget
