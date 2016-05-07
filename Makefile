@@ -21,9 +21,11 @@ OBJECTS += src/vlg_extractor/vlg_extractor.o src/vlg_extractor/img_features.o sr
 
 all: vlg_extractor
 
-vlg_extractor: $(OBJECTS)
-	xxd -i HELP.txt src/vlg_extractor/vlg_extractor_help.h
+vlg_extractor: help $(OBJECTS)
 	$(CXX) -o vlg_extractor $(OBJECTS) $(LDFLAGS) $(LIBS)
+
+help:
+	xxd -i HELP.txt src/vlg_extractor/vlg_extractor_help.h
 
 .SUFFIXES:
 .SUFFIXES:	.c .cc .C .cpp .o
